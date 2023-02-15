@@ -81,4 +81,17 @@ Column {
             root.hostMeeting()
         }
     }
+
+    Text {
+        anchors.right: parent.right
+
+        text: "<a href='https://github.com/axexix/chpoker-qt'>about & source</a>"
+        onLinkActivated: Qt.openUrlExternally(link)
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+        }
+    }
 }
