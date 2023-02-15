@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>VotingView.qml</file>
+        <file>WebSocketProtocolService.qml</file>
+        <file>ServiceContainer.qml</file>
+        <file>PokerService.qml</file>
+        <file>MeetingHostView.qml</file>
+        <file>LoginForm.qml</file>
+    </qresource>
+</RCC>
