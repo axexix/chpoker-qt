@@ -1,5 +1,5 @@
 QT_BRANCH ?= 6.4
-VERSION ?= 0.4.0
+VERSION ?= 0.4.1
 CONTAINER_NAME = chpoker-qt-wasm-build
 
 all : wasm

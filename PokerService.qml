@@ -16,6 +16,7 @@ Item {
     signal newTarget()
     signal scoresRevealed()
     signal noIdentityFound()
+    signal logMessageSent(string message)
 
     function loginVoter()
     {

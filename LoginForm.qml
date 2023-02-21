@@ -14,12 +14,6 @@ Column {
 
     spacing: 20
 
-    onVisibleChanged: {
-        if (visible) {
-            loginField.focus = true
-        }
-    }
-
     Text {
         id: txt
         text: "chpoker"
@@ -38,7 +32,7 @@ Column {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            placeholderText: "hostname"
+            placeholderText: qsTr("hostname")
             text: hostname
         }
 
@@ -48,7 +42,7 @@ Column {
         }
 
         Label {
-            text: "Please login with your identity provider"
+            text: qsTr("Please login with your identity provider")
             visible: !root.identityValid
         }
 
@@ -64,14 +58,14 @@ Column {
     }
 
     Text {
-        text: "or"
+        text: qsTr("or")
         visible: root.canHost
 
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
     Button {
-        text: "host a meeting"
+        text: qsTr("host a meeting")
         visible: root.canHost
 
         anchors.left: parent.left

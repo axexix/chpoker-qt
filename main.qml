@@ -53,9 +53,11 @@ Window {
             }
             onJoinedMeeting: {
                 meetingHostView.joinedMeeting(user)
+                meetingHostView.logMessage(qsTr("%1 joined the meeting").arg(user.name))
             }
             onLeftMeeting: {
                 meetingHostView.leftMeeting(user)
+                meetingHostView.logMessage(qsTr("%1 left the meeting").arg(user.name))
             }
             onUpdatedUser: {
                 meetingHostView.updateUser(user)
@@ -72,6 +74,7 @@ Window {
             onNewTarget: {
                 if (meetingHostView.visible) {
                     meetingHostView.resetScores()
+                    meetingHostView.logMessage(qsTr("new target"))
                 }
 
                 if (teamMemberForm.visible) {
@@ -83,6 +86,11 @@ Window {
                 meetingHostView.scoresVisible = true
                 teamMemberForm.votingEnabled = false
             }
+            onLogMessageSent: {
+                if (meetingHostView.visible) {
+                    meetingHostView.logMessage(message)
+                }
+            }
         }
     }
 
@@ -93,7 +101,7 @@ Window {
         anchors.bottomMargin: 10
         anchors.rightMargin: 10
 
-        text: remoteProtocolService.connected ? "online" : "offline"
+        text: remoteProtocolService.connected ? qsTr("online") : qsTr("offline")
     }
 
     LoginForm {
@@ -181,7 +189,7 @@ Window {
 
                 Layout.fillWidth: true
 
-                placeholderText: "<debug identity>"
+                placeholderText: qsTr("<debug identity>")
                 onEditingFinished: settings.identity = text
             }
         }

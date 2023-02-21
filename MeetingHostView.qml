@@ -51,6 +51,19 @@ Item {
             userModel.setProperty(i, "score", 0)
     }
 
+    function logMessage(message) {
+        logMessageModel.append({
+            message: message
+        })
+
+        logView.currentIndex = logMessageModel.count - 1
+    }
+
+    SystemPalette {
+        id: palette
+        colorGroup: SystemPalette.Active
+    }
+
     Action {
         id: revealAction
         text: qsTr("&Reveal")
@@ -61,6 +74,16 @@ Item {
         id: newTargetAction
         text: qsTr("&New target")
         onTriggered: root.newTarget()
+    }
+
+    Shortcut {
+        sequence: "R"
+        onActivated: revealAction.trigger()
+    }
+
+    Shortcut {
+        sequence: "N"
+        onActivated: newTargetAction.trigger()
     }
 
     ListModel {
@@ -81,6 +104,12 @@ Item {
 
             return null
         }
+    }
+
+    ListModel {
+        id: logMessageModel
+
+        property string message
     }
 
     ColumnLayout {
@@ -104,7 +133,12 @@ Item {
                     verticalAlignment: Qt.AlignVCenter
                     Layout.fillWidth: true
 
-                    text: "Hosting a session"
+                    text: qsTr("Hosting a session")
+                }
+
+                Switch {
+                    id: logSwitch
+                    text: qsTr("Show log")
                 }
 
                 ToolButton {
@@ -117,38 +151,94 @@ Item {
             }
         }
 
-        GridLayout {
-            id: flow
-
+        SplitView {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.margins: 10
 
-            columns: Math.ceil(Math.sqrt(userModel.count / (height / width)))
-            rowSpacing: 10
-            columnSpacing: 10
+            Item {
+                SplitView.minimumWidth: parent.width / 2
+                SplitView.preferredWidth: parent.width / 4 * 3
 
-            Repeater {
-                model: userModel
+                GridLayout {
+                    id: flow
 
-                Rectangle {
-                    color: active ? "lightgreen" : "lightgrey"
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.fill: parent
+                    anchors.margins: 5
 
-                    Text {
-                        text: " " + name
-                        font.pointSize: Math.min(parent.width, parent.height) / 10
+                    columns: Math.ceil(Math.sqrt(userModel.count) * width / height)
+                    rowSpacing: 5
+                    columnSpacing: 5
+
+                    Repeater {
+                        model: userModel
+
+                        Rectangle {
+                            color: active ? "lightgreen" : "lightgrey"
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            Text {
+                                text: " " + name
+                                font.pointSize: Math.min(parent.width, parent.height) / 10
+                            }
+
+                            Text {
+                                text: score === 0 ? "…" : (root.scoresVisible ? (score === -1 ? "∞" : score) : "✓")
+                                font.pointSize: Math.min(parent.width, parent.height) / 3
+                                anchors.centerIn: parent
+                            }
+                        }
+                    }
+                }
+            }
+
+            Item {
+                id: logContainer
+                visible: logSwitch.checked
+
+                ListView {
+                    id: logView
+
+                    anchors.fill: parent
+                    anchors.margins: 5
+                    anchors.bottomMargin: 32
+
+                    Component {
+                        id: logMessageDelegate
+
+                        Text {
+                            width: logView.width
+
+                            topPadding: 5
+                            bottomPadding: 5
+
+                            text: message
+                        }
                     }
 
-                    Text {
-                        text: score === 0 ? "…" : (root.scoresVisible ? (score === -1 ? "∞" : score) : "✓")
-                        font.pointSize: Math.min(parent.width, parent.height) / 3
-                        anchors.centerIn: parent
+                    clip: true
+                    focus: true
+
+                    model: logMessageModel
+                    delegate: logMessageDelegate
+
+                    header: Rectangle {
+                        width: parent.width
+                        height: 32
+                        color: palette.window
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: qsTr("Log")
+                            font.pixelSize: 16
+                        }
+                    }
+
+                    highlight: Rectangle {
+                        color: "lightsteelblue"
                     }
                 }
             }
         }
     }
-
 }
