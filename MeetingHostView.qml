@@ -9,6 +9,7 @@ Item {
     signal revealScores()
 
     property bool scoresVisible: false
+    property bool logPanelOpen: false
 
     function enable()
     {
@@ -26,7 +27,7 @@ Item {
         userModel.append({
             id:        user.id,
             name:      user.name,
-            active:    user.active,
+            connected: user.connected,
             score:     user.score
         })
     }
@@ -90,7 +91,7 @@ Item {
         id: userModel
 
         property string id
-        property bool active: false
+        property bool connected: false
         property string name
         property int score: 0
 
@@ -137,8 +138,10 @@ Item {
                 }
 
                 Switch {
-                    id: logSwitch
                     text: qsTr("Show log")
+                    checked: root.logPanelOpen
+
+                    onToggled: root.logPanelOpen = checked
                 }
 
                 ToolButton {
@@ -165,7 +168,7 @@ Item {
                     anchors.fill: parent
                     anchors.margins: 5
 
-                    columns: Math.ceil(Math.sqrt(userModel.count) * width / height)
+                    columns: Math.ceil(Math.sqrt(userModel.count * width / height))
                     rowSpacing: 5
                     columnSpacing: 5
 
@@ -173,7 +176,7 @@ Item {
                         model: userModel
 
                         Rectangle {
-                            color: active ? "lightgreen" : "lightgrey"
+                            color: connected ? "lightgreen" : "lightgrey"
                             Layout.fillWidth: true
                             Layout.fillHeight: true
 
@@ -194,7 +197,7 @@ Item {
 
             Item {
                 id: logContainer
-                visible: logSwitch.checked
+                visible: root.logPanelOpen
 
                 ListView {
                     id: logView

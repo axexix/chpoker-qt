@@ -155,12 +155,18 @@ Window {
 
         visible: false
 
+        logPanelOpen: settings.logPanelOpen
+
         onNewTarget: {
             pokerService.createTarget()
         }
 
         onRevealScores: {
             pokerService.revealScores()
+        }
+
+        onLogPanelOpenChanged: {
+            settings.logPanelOpen = logPanelOpen
         }
     }
 
@@ -177,20 +183,34 @@ Window {
         anchors.centerIn: parent
 
         padding: 10
-        width: 200
-        height: 300
+        width: 300
+        height: 500
         modal: true
         focus: true
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
-        contentItem: ColumnLayout {
-            TextArea {
-                id: debugIdentity
+        ColumnLayout {
+            anchors.fill: parent
 
+            Label {
+                text: qsTr("Debug panel")
+                font.bold: true
+            }
+
+            Label {
+                text: qsTr("Debug identity")
+            }
+
+            ScrollView {
+                Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                placeholderText: qsTr("<debug identity>")
-                onEditingFinished: settings.identity = text
+                TextArea {
+                    id: debugIdentity
+
+                    placeholderText: qsTr("<base64-encoded identity>")
+                    onEditingFinished: settings.identity = text
+                }
             }
         }
     }

@@ -62,6 +62,24 @@ void Settings::setIdentity(const QString &identity)
     emit identityChanged();
 }
 
+bool Settings::logPanelOpen()
+{
+    return m_logPanelOpen;
+}
+
+void Settings::setLogPanelOpen(const bool& logPanelOpen)
+{
+    if (m_logPanelOpen == logPanelOpen)
+        return;
+
+    qDebug() << "logPanelOpen changed:" << logPanelOpen;
+
+    m_logPanelOpen = logPanelOpen;
+    m_settings.setValue("logPanelOpen", logPanelOpen);
+
+    emit logPanelOpenChanged();
+}
+
 void Settings::checkSettingsReady()
 {
     if (m_settings.status() == QSettings::NoError) {
@@ -82,7 +100,9 @@ void Settings::loadSettings()
 
     setHostname(m_settings.value("hostname", defaultHostname).toString());
     setInsecure(m_settings.value("insecure", defaultInsecure).toBool());
+    setLogPanelOpen(m_settings.value("logPanelOpen", false).toBool());
 
     qDebug() << "hostname:" << hostname();
     qDebug() << "insecure:" << insecure();
+    qDebug() << "logPanelOpen:" << logPanelOpen();
 }
